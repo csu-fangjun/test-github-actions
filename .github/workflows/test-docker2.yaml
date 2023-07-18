@@ -25,8 +25,8 @@ jobs:
       - name: Run the build process with Docker
         uses: addnab/docker-run-action@v3
         with:
-            image: pytorch/manylinux-builder10.2
-            options: -v ${{ github.workspace }}:/var/www 
+            image: pytorch/manylinux-builder:10.2
+            options: -v ${{ github.workspace }}:/var/www
             run: |
               echo "pwd: $PWD"
               ls -lh /opt/_internal/cpython-3.10.1/lib

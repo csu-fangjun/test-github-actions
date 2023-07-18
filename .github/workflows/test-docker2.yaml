@@ -1,0 +1,48 @@
+name: test-docker
+
+on:
+  push:
+    branches:
+      - master
+      - docker2
+
+jobs:
+  build-manylinux-wheels:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # see https://github.com/pytorch/test-infra/blob/9e3d392690719fac85bad0c9b67f530e48375ca1/tools/scripts/generate_binary_build_matrix.py
+      # https://github.com/pytorch/builder/tree/main/manywheel
+      # https://github.com/pytorch/builder/pull/476
+      # https://github.com/k2-fsa/k2/issues/733
+      # https://github.com/pytorch/pytorch/pull/50633  (generate build matrix)
+      - name: Run the build process with Docker
+        uses: addnab/docker-run-action@v3
+        with:
+            image: ${{ matrix.image }}
+            options: -v ${{ github.workspace }}:/var/www -e PYTHON_VERSION=${{ matrix.python-version }} -e TORCH_VERSION=${{ matrix.torch }} -e CUDA_VERSION=${{ matrix.cuda }}
+            run: |
+              echo "pwd: $PWD"
+              ls -lh /opt/_internal/cpython-3.10.1/lib
+              uname -a
+              id
+              cat /etc/*release
+              gcc --version
+              nvcc --version
+              which nvcc
+              which gcc
+              ls -lh /usr/local
+              python3 --version
+              which python3
+              cp /var/www/*.sh .
+
+              pushd /usr/local
+              rm cuda
+              ln -s cuda-$CUDA_VERSION cuda
+              popd

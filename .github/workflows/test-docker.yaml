@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - docker
+      - docker2
 
 jobs:
   generate_build_matrix:

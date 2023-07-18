@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - docker2
 
 jobs:
   build-manylinux-wheels:

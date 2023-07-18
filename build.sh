@@ -84,9 +84,11 @@ yum clean all
 echo "Downloading k2"
 git clone --depth 1 https://github.com/k2-fsa/k2
 cd k2
+cp -v /var/www/CMakeLists.txt k2/python/csrc/
+ls -lh k2/python/csrc/
 
 export CMAKE_CUDA_COMPILER_LAUNCHER=
-export K2_CMAKE_ARGS=" -DPYTHON_EXECUTABLE=$PYTHON_INSTALL_DIR/bin/python3 -DPYTHON_LIBRARY=$PYTHON_INSTALL_DIR/lib/libpython$PYTHON_VERSION.so "
+export K2_CMAKE_ARGS=" -DPYTHON_EXECUTABLE=$PYTHON_INSTALL_DIR/bin/python3 "
 export K2_MAKE_ARGS=" -j2 "
 
 python3 setup.py bdist_wheel
